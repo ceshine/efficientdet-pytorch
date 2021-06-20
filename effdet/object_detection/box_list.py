@@ -53,7 +53,10 @@ class BoxList(object):
         if len(boxes.shape) != 2 or boxes.shape[-1] != 4:
             raise ValueError('Invalid dimensions for box data.')
         if boxes.dtype != torch.float32:
-            raise ValueError('Invalid tensor type: should be tf.float32')
+            if boxes.dtype is torch.float16:
+                boxes = boxes.float()
+            else:
+                raise ValueError('Invalid tensor type: should be tf.float32')
         self.data = {'boxes': boxes}
 
     def num_boxes(self):
