@@ -131,7 +131,9 @@ def generate_detections(
     # here since PyTorch NMS expects them in that form.
     boxes = decode_box_outputs(box_outputs.float(), anchor_boxes, output_xyxy=True)
     if img_scale is not None and img_size is not None:
-        boxes = clip_boxes_xyxy(boxes, img_size / img_scale)  # clip before NMS better?
+        boxes = clip_boxes_xyxy(
+            boxes, img_size.flip(0) / img_scale
+        )  # clip before NMS better?
 
     scores = cls_outputs.sigmoid().squeeze(1).float()
     if soft_nms:
